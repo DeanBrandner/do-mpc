@@ -565,6 +565,7 @@ class NLPDifferentiator:
             dx_dp_num, dlam_dp_num = self._map_param_sens_to_full(dx_dp_num_red,dlam_dp_num_red)
         else:
             dx_dp_num = dx_dp_num_red
+            dlam_dp_num = dlam_dp_num_red
 
         return dx_dp_num, dlam_dp_num, residuals, LICQ_status, SC_status, where_cons_active
 
