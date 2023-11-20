@@ -1,4 +1,4 @@
-#
+
 #   This file is part of do-mpc
 #
 #   do-mpc: An environment for the easy, modular and efficient implementation of
@@ -20,41 +20,41 @@
 #   You should have received a copy of the GNU General Public License
 #   along with do-mpc.  If not, see <http://www.gnu.org/licenses/>.
 
+# %%
+import sys 
+import os
 import numpy as np
-from casadi import *
-from casadi.tools import *
-import pdb
-import sys
-sys.path.append('../../')
+import casadi.tools as castools
+
+sys.path.append(os.path.join('..','..'))
+sys.path.append(os.path.join('..','CSTR'))
 import do_mpc
+from template_model import template_model
+from template_mpc import template_mpc
+from template_simulator import template_simulator
 
 
-def template_simulator(model):
-    """
-    --------------------------------------------------------------------------
-    template_simulator: tuning parameters
-    --------------------------------------------------------------------------
-    """
-    simulator = do_mpc.simulator.Simulator(model)
+# %%
 
-    params_simulator = {
-        'integration_tool': 'cvodes',
-        'abstol': 1e-10,
-        'reltol': 1e-10,
-        't_step': 1.0,
-    }
+model = template_model()
+mpc = template_mpc(model)
+simulator = template_simulator(model)
 
-    simulator.set_param(**params_simulator)
+# %%
+nlpdiff = do_mpc.differentiator.DoMPCDifferentiator(mpc)
+nlpdiff.settings.check_rank = False
+nlpdiff.settings.check_LICQ = False
 
-    p_num = simulator.get_p_template()
-    p_num['Y_x'] = 0.4
-    p_num['S_in'] = 220.0
-
-    def p_fun(t_now):
-        return p_num
-
-    simulator.set_p_fun(p_fun)
-
-    simulator.setup()
-
-    return simulator
+# %%
+simulator.x0 = np.array([0.5, 0.5, 134.14, 130.0]).reshape(-1,1)
+# %%
+mpc.make_step(simulator.x0)
+# %%
+dxdp, dlamdp = nlpdiff.differentiate()
+# %%
+dlamdp.shape
+# %%
+nlpdiff.status
+# %%
+nlpdiff.sens_num['dxdp', castools.indexf['_u', 0, 0], castools.indexf['_x0']]
+# %%
