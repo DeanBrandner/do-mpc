@@ -568,7 +568,7 @@ class NLPDifferentiator:
         """
         Maps the parametric sensitivities to the original sensitivities of the lagrange multipliers.
         """
-        dlam_dp = np.zeros((self.n_g+self.n_x,self.n_p))
+        dlam_dp = np.zeros((self.n_g+self.n_x, param_sens.shape[-1]))
         assert len(where_cons_active) == param_sens.shape[0]-self.n_x, "Number of non-zero dual variables does not match number of parametric sensitivities for lagrange multipliers."
         
         if sp_sparse.issparse(param_sens):
