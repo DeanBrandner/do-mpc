@@ -70,6 +70,7 @@ class RTServer:
         # Try to create the server
         try:
             self.opcua_server = opcua.Server()
+            
             print("A server named - {} - was created".format(self.name))
         except RuntimeError:
             self.created = False

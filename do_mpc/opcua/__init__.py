@@ -11,4 +11,5 @@ if __ASYNCUA_INSTALLED__:
     from ._base import RTBase
     from ._helper import NamespaceEntry, Namespace, ServerOpts, ClientOpts
 else:
-    warnings.warn('The opcua feature is not available. Please install the full version of do-mpc to access this feature.')
+    # warnings.warn('The opcua feature is not available. Please install the full version of do-mpc to access this feature.')
+    pass
